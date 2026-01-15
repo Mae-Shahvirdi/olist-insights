@@ -1,63 +1,140 @@
-# Olist E-Commerce Data Analysis — Ongoing Project
-Olist E-Commerce Analytics — an ongoing project to clean, explore, and analyze the Brazilian Olist e-commerce dataset using Python and pandas, preparing it for insights on customer behavior, payments, and satisfaction.
+# Brazilian E-Commerce Analysis (Olist Dataset)
 
-# Overview
-This project explores and cleans the Olist Brazilian E-Commerce dataset, a large real-world dataset containing customer, order, payment, product, and review information.
-The goal is to prepare a clean, analysis-ready dataset to study key business questions such as:
+## 📌 Project Overview
+This project explores and prepares the **Brazilian E-Commerce Public Dataset by Olist** for analysis.  
+The goal of this phase is **data cleaning, validation, and integration readiness**, ensuring that all tables are reliable, logically consistent, and safe to join before any analysis or modeling.
 
-- Customer behavior and satisfaction
-- Payment methods and spending patterns
-- Delivery performance and logistics
-- Seller and product insights
+The dataset represents real e-commerce transactions made at Olist, a Brazilian marketplace that connects small businesses to customers.
 
-The project is being developed iteratively — with each dataset cleaned, validated, and documented before merging.
+---
 
-## Datasets Processed So Far
-The following tables from the Olist dataset have been explored and cleaned up to this point:
+## 📂 Dataset Description
+The Olist dataset is a **relational dataset** composed of multiple tables representing different aspects of the e-commerce lifecycle.
 
-| Dataset            | Rows                | Columns | Main Focus                                   | Cleaning Status                                   |
-| ------------------ | ------------------- | ------- | -------------------------------------------- | ------------------------------------------------- |
-| **geolocation**    | 1,000,163 → 738,307 | 5       | Latitude/longitude, city/state, ZIP prefixes | ✅ Cleaned (duplicates + invalid coords removed)   |
-| **customers**      | 99,441              | 5       | Customer IDs, ZIP prefixes, cities/states    | ✅ Cleaned earlier                                 |
-| **order_items**    | 112,650             | 7       | Product-level details per order              | ✅ Cleaned (dates + numeric validation)            |
-| **order_payments** | 103,886             | 5       | Payment methods and values                   | ✅ Cleaned (kept 9 valid zero-value payments)      |
-| **order_reviews**  | 99,224              | 7       | Customer feedback and review scores          | ✅ Cleaned (dates converted, missing text handled) |
+### Tables used in this project:
+- **orders** – central table describing the order lifecycle  
+- **order_items** – individual items within each order  
+- **order_payments** – payment transactions per order  
+- **order_reviews** – customer reviews and ratings  
+- **products** – product metadata and physical attributes  
+- **sellers** – seller location and identification  
+- **customers** – customer location data  
+- **product_category_translation** – Portuguese → English category mapping  
+- **geolocation** – latitude/longitude reference data  
 
+---
 
-## Cleaning Highlights
+## 🧹 Data Cleaning & Validation Strategy
 
-## General Steps
-Across all datasets, the following cleaning principles were applied:
+A reusable helper function (`clean_basics`) was used across tables to:
+- remove duplicate rows
+- convert date columns to proper `datetime` format
 
-- Checked and removed duplicate rows.
-- Validated and standardized column data types.
-- Converted string-based date columns to datetime.
-- Verified numeric ranges and handled potential outliers.
-- Removed invalid geolocations and redundant records.
-- Kept rare but legitimate edge cases (e.g., 0-value payments).
-- Preserved missing text fields rather than filling them artificially.
+All other cleaning steps were **table-specific** and focused on:
+- validating business keys (table grain)
+- enforcing logical constraints
+- preserving meaningful missing values
 
-## Example: Review Dataset:
-- review_comment_title: only ~12 % filled — optional field, most customers skipped it.
-- review_comment_message: ~41 % filled — expected behavior.
-- review_score: all valid (1–5), mean = 4.09, median = 5 → customers are generally satisfied.
-- Dates converted for future analysis (e.g., review response time).
+No imputation or arbitrary data removal was performed.
 
-## Current Progress
-Cleaned and validated the major supporting tables.
-Preparing for data merging and feature engineering, combining customer, order, and review data to enable deeper insights
+---
 
-## Next Steps
-- Clean remaining tables (orders, sellers, products).
-- Merge all cleaned datasets into a master analytical table.
-- Create KPIs for delivery time, payment trends, and satisfaction.
-- Visualize findings in Python (Matplotlib / Seaborn / Plotly).
-- Publish summary insights and Jupyter notebook.
+## ✅ Cleaning Summary by Table
 
-## Tech Stack
-- Language: Python (Pandas, NumPy)
-- Environment: Jupyter Notebook
-- Version control: Git + GitHub
-- Visualization (planned): Matplotlib, Seaborn, Plotly
-- Data source: Olist E-Commerce Dataset on Kaggle
+### 1. Orders (`orders`)
+- One row per `order_id`
+- Converted all lifecycle timestamps to datetime
+- Validated primary key uniqueness
+- Checked logical date ordering (delivery cannot occur before purchase)
+- Preserved missing lifecycle dates as meaningful (e.g. canceled orders)
 
+---
+
+### 2. Order Items (`order_items`)
+- One row per (`order_id`, `order_item_id`)
+- Converted shipping deadline to datetime
+- Validated non-negative prices and freight values
+- Confirmed business-key uniqueness
+- Ready for joins without risk of row multiplication
+
+---
+
+### 3. Order Payments (`order_payments`)
+- One row per (`order_id`, `payment_sequential`)
+- Removed duplicate safety rows
+- Validated payment-sequence uniqueness
+- Preserved multiple payments per order (installments, mixed methods)
+
+---
+
+### 4. Order Reviews (`order_reviews`)
+- Reviews are optional; missing text was preserved
+- Converted review timestamps to datetime
+- Validated review score range (1–5)
+- Resolved multiple reviews per order by keeping the **latest review**
+- Final grain: one review per order
+
+---
+
+### 5. Products (`products`)
+- One row per `product_id`
+- Validated uniqueness of product identifiers
+- Checked physical attributes for non-negative values
+- Preserved missing metadata as incomplete seller information
+
+---
+
+### 6. Sellers (`sellers`)
+- One row per `seller_id`
+- Validated uniqueness and state code format
+- No missing values or inconsistencies found
+
+---
+
+### 7. Product Category Translation (`product_category_translation`)
+- One row per product category
+- Verified unique category-to-translation mapping
+- Used as a lookup table for enrichment
+
+---
+
+### 8. Geolocation (`geolocation`)
+- Validated latitude and longitude bounds for Brazil
+- Removed invalid coordinate entries
+- Prepared for optional spatial analysis
+
+---
+
+## 🛠 Tools & Technologies
+- **Python**
+- **Pandas**
+- **Jupyter Notebook**
+- **Kaggle API**
+
+---
+
+## 📈 Current Project Status
+✔ All tables cleaned and validated  
+✔ Business keys and grains confirmed  
+✔ Dataset is **integration-ready**
+
+---
+
+## 🔜 Next Steps
+- Integrate tables into a master analytical dataset
+- Perform exploratory data analysis (EDA)
+- Analyze delivery performance, customer satisfaction, and revenue drivers
+- Build dashboards (Power BI / Tableau) or predictive models
+
+---
+
+## 📎 Data Source
+Brazilian E-Commerce Public Dataset by Olist  
+Available on Kaggle: https://www.kaggle.com/olistbr/brazilian-ecommerce
+
+---
+
+## ✍️ Author
+Mae Shahvirdi  
+
+Data Analytics | Python | SQL | BI | UX Background
