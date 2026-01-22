@@ -1,6 +1,6 @@
 # Brazilian E-Commerce Analysis (Olist Dataset)
 
-## 📌 Project Overview
+## Project Overview
 This project presents an end-to-end **exploratory and diagnostic data analysis** of the
 Brazilian E-Commerce Public Dataset by Olist.  
 The objective is to understand **delivery performance, customer satisfaction, and product
@@ -11,7 +11,7 @@ complete and well-scoped **data analytics case study**.
 
 ---
 
-## 📂 Dataset
+## Dataset
 The dataset is provided by Olist and represents real e-commerce orders placed in Brazil.
 It consists of multiple relational tables covering orders, items, payments, reviews,
 products, sellers, customers, and geolocation data.
@@ -21,7 +21,7 @@ https://www.kaggle.com/olistbr/brazilian-ecommerce
 
 ---
 
-## 🛠️ Tools & Technologies
+## Tools & Technologies
 - Python  
 - Pandas & NumPy  
 - Matplotlib & Seaborn  
@@ -30,7 +30,7 @@ https://www.kaggle.com/olistbr/brazilian-ecommerce
 
 ---
 
-## 🔍 Analytical Approach
+## Analytical Approach
 
 The project follows a structured analytical workflow:
 
@@ -59,7 +59,7 @@ The project follows a structured analytical workflow:
 
 ---
 
-## 📊 Key Findings
+## Key Findings
 
 ### Logistics & Delivery Performance
 - Most orders are delivered on time, but late deliveries vary significantly by region.
